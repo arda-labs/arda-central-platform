@@ -1,3 +1,54 @@
+server:
+  port: 8000
+
 spring:
   application:
     name: arda-central-platform
+
+  # Central Platform Database (Static Configuration)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/arda_central
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  # Disable Liquibase (database migration managed manually)
+  liquibase:
+    enabled: false
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Initialize Database with Schema and Seed Data
+  # DISABLED: Requires PostgreSQL to be running
+  sql:
+    init:
+      mode: never
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+      continue-on-error: false
+
+# Disable multi-tenancy for Central Platform
+# Central Platform manages tenant metadata, it doesn't route to tenant databases
+arda:
+  shared:
+    multi-tenancy:
+      enabled: false
+    security:
+      enabled: false
+
+logging:
+  level:
+    vn.io.arda: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
