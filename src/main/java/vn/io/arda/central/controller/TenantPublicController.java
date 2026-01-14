@@ -13,9 +13,10 @@ import vn.io.arda.central.service.TenantService;
  * Safe for client-side consumption
  */
 @RestController
-@RequestMapping("/api/v1/public/tenants")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "*") // Allow CORS for local development
 public class TenantPublicController {
 
     private final TenantService tenantService;
@@ -27,11 +28,27 @@ public class TenantPublicController {
      * @param tenantKey Unique tenant identifier
      * @return Tenant public information (no sensitive database configuration)
      */
-    @GetMapping("/info/{tenantKey}")
+    @GetMapping("/public/tenants/info/{tenantKey}")
     public ResponseEntity<TenantPublicInfoDto> getTenantInfo(@PathVariable String tenantKey) {
         log.info("Public API: Fetching tenant info for: {}", tenantKey);
 
         TenantPublicInfoDto tenantInfo = tenantService.getPublicInfo(tenantKey);
+
+        return ResponseEntity.ok(tenantInfo);
+    }
+
+    /**
+     * Get tenant information by tenant code (simplified endpoint for frontend)
+     * Same as /public/tenants/info/{tenantCode} but with shorter path
+     *
+     * @param tenantCode Unique tenant identifier
+     * @return Tenant public information
+     */
+    @GetMapping("/tenants/{tenantCode}")
+    public ResponseEntity<TenantPublicInfoDto> getTenantByCode(@PathVariable String tenantCode) {
+        log.info("Public API: Fetching tenant by code: {}", tenantCode);
+
+        TenantPublicInfoDto tenantInfo = tenantService.getPublicInfo(tenantCode);
 
         return ResponseEntity.ok(tenantInfo);
     }

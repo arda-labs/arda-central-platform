@@ -45,7 +45,25 @@ arda:
     multi-tenancy:
       enabled: false
     security:
-      enabled: false
+      enabled: true
+      jwt:
+        base-keycloak-url: http://localhost:8081
+        issuer-uri: http://localhost:8081/realms/master
+      cors:
+        allowed-origins:
+          - http://localhost:4200
+          - http://localhost:4201
+          - http://localhost:4210
+        allowed-methods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - PATCH
+          - OPTIONS
+        allowed-headers:
+          - "*"
+        max-age: 3600
 
 logging:
   level:
