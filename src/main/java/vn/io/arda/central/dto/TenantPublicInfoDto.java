@@ -10,11 +10,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record TenantPublicInfoDto(
-    String tenantCode,    // Changed from tenantKey to match frontend interface
-    String tenantName,    // Changed from displayName to match frontend interface
-    String primaryColor,
-    String logoUrl,
-    String dbType,        // Added to match frontend interface (POSTGRESQL/ORACLE)
-    String status         // ACTIVE/INACTIVE
-) {
+        String key, // Matches 'key' in Shell's TenantInfo
+        String name, // Matches 'name' in Shell's TenantInfo
+        String primaryColor,
+        String logo, // Matches 'logo' in Shell's TenantInfo
+        String dbType,
+        String status) {
 }

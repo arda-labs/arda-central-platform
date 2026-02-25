@@ -10,6 +10,8 @@ import vn.io.arda.central.domain.repository.TenantRepository;
 import vn.io.arda.central.dto.CreateTenantRequest;
 import vn.io.arda.central.dto.TenantDatabaseConfigDto;
 import vn.io.arda.central.dto.TenantPublicInfoDto;
+import vn.io.arda.central.dto.TenantDetailDto;
+import vn.io.arda.central.dto.UpdateTenantRequest;
 import vn.io.arda.shared.event.tenant.TenantCreatedEvent;
 import vn.io.arda.shared.exception.ArdaException;
 
@@ -22,7 +24,8 @@ public class TenantService {
     private final ApplicationEventPublisher eventPublisher;
 
     /**
-     * Creates a new tenant and publishes TenantCreatedEvent for Keycloak provisioning.
+     * Creates a new tenant and publishes TenantCreatedEvent for Keycloak
+     * provisioning.
      *
      * @param request Tenant creation request
      * @return Created tenant entity
@@ -59,8 +62,7 @@ public class TenantService {
         TenantCreatedEvent event = new TenantCreatedEvent(
                 savedTenant.getTenantKey(),
                 savedTenant.getDisplayName(),
-                savedTenant.getDbType().name()
-        );
+                savedTenant.getDbType().name());
         eventPublisher.publishEvent(event);
         log.info("TenantCreatedEvent published for tenant: {}", savedTenant.getTenantKey());
 
@@ -75,16 +77,27 @@ public class TenantService {
     public TenantPublicInfoDto getPublicInfo(String tenantKey) {
         log.debug("Fetching public info for tenant: {}", tenantKey);
 
+        // Special case for 'master' realm (System Administration)
+        if ("master".equalsIgnoreCase(tenantKey)) {
+            return new TenantPublicInfoDto(
+                    "master",
+                    "Arda System Admin",
+                    "#6366F1", // Indigo
+                    null, // Default logo
+                    "POSTGRES",
+                    "ACTIVE");
+        }
+
         Tenant tenant = tenantRepository.findByTenantKey(tenantKey)
-            .orElseThrow(() -> new ArdaException("Tenant not found: " + tenantKey));
+                .orElseThrow(() -> new ArdaException("Tenant not found: " + tenantKey));
 
         return new TenantPublicInfoDto(
-            tenant.getTenantKey(),        // tenantCode
-            tenant.getDisplayName(),      // tenantName
-            tenant.getPrimaryColor(),     // primaryColor
-            tenant.getLogoUrl(),          // logoUrl
-            tenant.getDbType().name(),    // dbType (POSTGRES -> POSTGRESQL)
-            tenant.getStatus().name()     // status (ACTIVE/INACTIVE)
+                tenant.getTenantKey(), // tenantCode
+                tenant.getDisplayName(), // tenantName
+                tenant.getPrimaryColor(), // primaryColor
+                tenant.getLogoUrl(), // logoUrl
+                tenant.getDbType().name(), // dbType (POSTGRES -> POSTGRESQL)
+                tenant.getStatus().name() // status (ACTIVE/INACTIVE)
         );
     }
 
@@ -96,17 +109,125 @@ public class TenantService {
         log.debug("Fetching database config for tenant: {}", tenantKey);
 
         Tenant tenant = tenantRepository.findByTenantKey(tenantKey)
-            .orElseThrow(() -> new ArdaException("Tenant configuration not found: " + tenantKey));
+                .orElseThrow(() -> new ArdaException("Tenant configuration not found: " + tenantKey));
 
         return new TenantDatabaseConfigDto(
-            tenant.getTenantKey(),
-            tenant.getDisplayName(),
-            tenant.getStatus().name(),
-            tenant.getDbType().name(),
-            tenant.getJdbcUrl(),
-            tenant.getDbUsername(),
-            tenant.getDbPassword(),
-            tenant.getDriverClassName()
-        );
+                tenant.getTenantKey(),
+                tenant.getDisplayName(),
+                tenant.getStatus().name(),
+                tenant.getDbType().name(),
+                tenant.getJdbcUrl(),
+                tenant.getDbUsername(),
+                tenant.getDbPassword(),
+                tenant.getDriverClassName());
+    }
+
+    /**
+     * Update tenant UI configuration (name, logo, color).
+     * Only allows updating display properties, not database config.
+     *
+     * @param tenantKey Tenant key to update
+     * @param request   Update request with new values
+     * @return Updated tenant details
+     * @throws ArdaException if tenant not found
+     */
+    @Transactional
+    public TenantDetailDto updateTenant(String tenantKey, UpdateTenantRequest request) {
+        log.info("Updating tenant: {}", tenantKey);
+
+        Tenant tenant = tenantRepository.findByTenantKey(tenantKey)
+                .orElseThrow(() -> new ArdaException("Tenant not found: " + tenantKey));
+
+        // Update only non-null fields
+        if (request.getDisplayName() != null) {
+            tenant.setDisplayName(request.getDisplayName());
+        }
+        if (request.getPrimaryColor() != null) {
+            tenant.setPrimaryColor(request.getPrimaryColor());
+        }
+        if (request.getLogoUrl() != null) {
+            tenant.setLogoUrl(request.getLogoUrl());
+        }
+
+        Tenant saved = tenantRepository.save(tenant);
+        log.info("Tenant updated successfully: {}", tenantKey);
+
+        return mapToDetailDto(saved);
+    }
+
+    /**
+     * Update tenant status.
+     *
+     * @param tenantKey Tenant key
+     * @param status    New status (ACTIVE, INACTIVE, TRIAL, SUSPENDED)
+     * @return Updated tenant details
+     * @throws ArdaException if tenant not found
+     */
+    @Transactional
+    public TenantDetailDto updateStatus(String tenantKey, String status) {
+        log.info("Updating tenant status: {} -> {}", tenantKey, status);
+
+        Tenant tenant = tenantRepository.findByTenantKey(tenantKey)
+                .orElseThrow(() -> new ArdaException("Tenant not found: " + tenantKey));
+
+        tenant.setStatus(Tenant.TenantStatus.valueOf(status));
+        Tenant saved = tenantRepository.save(tenant);
+
+        log.info("Tenant status updated successfully: {} -> {}", tenantKey, status);
+        return mapToDetailDto(saved);
+    }
+
+    /**
+     * Soft delete tenant by setting status to INACTIVE.
+     * Does not physically delete the tenant from database.
+     *
+     * @param tenantKey Tenant key to delete
+     * @throws ArdaException if tenant not found
+     */
+    @Transactional
+    public void deleteTenant(String tenantKey) {
+        log.warn("Soft deleting tenant: {}", tenantKey);
+
+        Tenant tenant = tenantRepository.findByTenantKey(tenantKey)
+                .orElseThrow(() -> new ArdaException("Tenant not found: " + tenantKey));
+
+        tenantRepository.delete(tenant);
+
+        log.info("Tenant physically deleted: {}", tenantKey);
+    }
+
+    /**
+     * Get detailed tenant information including database config.
+     * For SUPER_ADMIN use only.
+     *
+     * @param tenantKey Tenant key
+     * @return Detailed tenant information
+     * @throws ArdaException if tenant not found
+     */
+    @Transactional(readOnly = true)
+    public TenantDetailDto getTenantDetails(String tenantKey) {
+        log.debug("Fetching detailed info for tenant: {}", tenantKey);
+
+        Tenant tenant = tenantRepository.findByTenantKey(tenantKey)
+                .orElseThrow(() -> new ArdaException("Tenant not found: " + tenantKey));
+
+        return mapToDetailDto(tenant);
+    }
+
+    /**
+     * Map Tenant entity to TenantDetailDto
+     */
+    private TenantDetailDto mapToDetailDto(Tenant tenant) {
+        return new TenantDetailDto(
+                tenant.getTenantKey(),
+                tenant.getDisplayName(),
+                tenant.getPrimaryColor(),
+                tenant.getLogoUrl(),
+                tenant.getDbType().name(),
+                tenant.getStatus().name(),
+                tenant.getJdbcUrl(),
+                tenant.getDbUsername(),
+                tenant.getCreatedAt(),
+                tenant.getUpdatedAt());
     }
 }

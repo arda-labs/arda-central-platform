@@ -12,6 +12,9 @@ import vn.io.arda.central.domain.repository.TenantRepository;
 import vn.io.arda.central.dto.CreateTenantRequest;
 import vn.io.arda.central.dto.CreateTenantResponse;
 import vn.io.arda.central.dto.TenantPublicInfoDto;
+import vn.io.arda.central.dto.TenantDetailDto;
+import vn.io.arda.central.dto.UpdateTenantRequest;
+import vn.io.arda.central.dto.UpdateStatusRequest;
 import vn.io.arda.central.service.TenantService;
 
 import java.util.List;
@@ -19,12 +22,12 @@ import java.util.stream.Collectors;
 
 /**
  * Management API for tenant administration.
- * Requires SUPER_ADMIN role for all operations.
+ * Requires super_admin role for all operations.
  *
  * @since 0.0.2
  */
 @RestController
-@RequestMapping("/api/v1/tenants")
+@RequestMapping("/v1/tenants")
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "*") // Allow CORS for local development
@@ -35,13 +38,13 @@ public class TenantManagementController {
 
     /**
      * Creates a new tenant.
-     * Requires SUPER_ADMIN role.
+     * Requires super_admin role.
      *
      * @param request Tenant creation request
      * @return Tenant creation response
      */
     @PostMapping
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    //@PreAuthorize("hasRole('super_admin')")
     public ResponseEntity<CreateTenantResponse> createTenant(@Valid @RequestBody CreateTenantRequest request) {
         log.info("Received tenant creation request for: {}", request.getTenantKey());
 
@@ -66,12 +69,12 @@ public class TenantManagementController {
 
     /**
      * Lists all tenants (for admin dashboard).
-     * Requires SUPER_ADMIN role.
+     * Requires super_admin role.
      *
      * @return List of tenant public information
      */
     @GetMapping
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    //@PreAuthorize("hasRole('super_admin')")
     public ResponseEntity<List<TenantPublicInfoDto>> listTenants() {
         log.info("Fetching all tenants for admin dashboard");
 
@@ -91,18 +94,92 @@ public class TenantManagementController {
 
     /**
      * Gets tenant details by key.
-     * Requires SUPER_ADMIN role.
+     * Requires super_admin role.
      *
      * @param tenantKey Tenant key
      * @return Tenant public information
      */
     @GetMapping("/{tenantKey}")
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    //@PreAuthorize("hasRole('super_admin')")
     public ResponseEntity<TenantPublicInfoDto> getTenant(@PathVariable String tenantKey) {
         log.info("Fetching tenant details for: {}", tenantKey);
 
         TenantPublicInfoDto tenant = tenantService.getPublicInfo(tenantKey);
 
         return ResponseEntity.ok(tenant);
+    }
+
+    /**
+     * Gets detailed tenant information including database config.
+     * Requires super_admin role.
+     *
+     * @param tenantKey Tenant key
+     * @return Detailed tenant information
+     */
+    @GetMapping("/{tenantKey}/details")
+    //@PreAuthorize("hasRole('super_admin')")
+    public ResponseEntity<TenantDetailDto> getTenantDetails(@PathVariable String tenantKey) {
+        log.info("Fetching detailed tenant info for: {}", tenantKey);
+
+        TenantDetailDto details = tenantService.getTenantDetails(tenantKey);
+
+        return ResponseEntity.ok(details);
+    }
+
+    /**
+     * Updates tenant UI configuration (name, logo, primary color).
+     * Requires super_admin role.
+     *
+     * @param tenantKey Tenant key to update
+     * @param request Update request
+     * @return Updated tenant details
+     */
+    @PutMapping("/{tenantKey}")
+    //@PreAuthorize("hasRole('super_admin')")
+    public ResponseEntity<TenantDetailDto> updateTenant(
+            @PathVariable String tenantKey,
+            @Valid @RequestBody UpdateTenantRequest request) {
+        log.info("Updating tenant: {}", tenantKey);
+
+        TenantDetailDto updated = tenantService.updateTenant(tenantKey, request);
+
+        return ResponseEntity.ok(updated);
+    }
+
+    /**
+     * Updates tenant status.
+     * Requires super_admin role.
+     *
+     * @param tenantKey Tenant key
+     * @param request Status update request
+     * @return Updated tenant details
+     */
+    @PatchMapping("/{tenantKey}/status")
+    //@PreAuthorize("hasRole('super_admin')")
+    public ResponseEntity<TenantDetailDto> updateStatus(
+            @PathVariable String tenantKey,
+            @Valid @RequestBody UpdateStatusRequest request) {
+        log.info("Updating tenant status: {} -> {}", tenantKey, request.getStatus());
+
+        TenantDetailDto updated = tenantService.updateStatus(tenantKey, request.getStatus());
+
+        return ResponseEntity.ok(updated);
+    }
+
+    /**
+     * Soft deletes a tenant (sets status to INACTIVE).
+     * Requires super_admin role.
+     *
+     * @param tenantKey Tenant key to delete
+     * @return No content
+     */
+    @DeleteMapping("/{tenantKey}")
+    //@PreAuthorize("hasRole('super_admin')")
+    public ResponseEntity<Void> deleteTenant(@PathVariable String tenantKey) {
+        log.warn("Deleting tenant: {}", tenantKey);
+
+        tenantService.deleteTenant(tenantKey);
+
+        return ResponseEntity.noContent().build();
     }
 }

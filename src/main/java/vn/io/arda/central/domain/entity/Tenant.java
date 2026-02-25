@@ -26,8 +26,8 @@ public class Tenant {
     private UUID id;
 
     @NotBlank(message = "Tenant key is required")
-    @Pattern(regexp = "^[a-z0-9_-]+$", message = "Tenant key must contain only lowercase letters, numbers, hyphens, and underscores")
-    @Column(name = "tenant_key", nullable = false, unique = true, length = 50)
+    @Pattern(regexp = "^[a-z0-9]{6}$", message = "Tenant key must be exactly 6 characters containing only lowercase letters and numbers")
+    @Column(name = "tenant_key", nullable = false, unique = true, length = 6)
     private String tenantKey;
 
     @NotBlank(message = "Display name is required")

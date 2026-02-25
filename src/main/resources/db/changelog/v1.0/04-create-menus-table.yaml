@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - changeSet:
+      id: 04-create-menus-table
+      author: arda-central
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: menus
+      changes:
+        - createTable:
+            tableName: menus
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: label
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: path
+                  type: VARCHAR(255)
+              - column:
+                  name: icon
+                  type: VARCHAR(100)
+              - column:
+                  name: icon_color
+                  type: VARCHAR(50)
+              - column:
+                  name: sort_order
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: parent_id
+                  type: UUID
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: menus
+            baseColumnNames: parent_id
+            constraintName: fk_menu_parent
+            referencedTableName: menus
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_menu_parent_id
+            tableName: menus
+            columns:
+              - column:
+                  name: parent_id
+
+        - createIndex:
+            indexName: idx_menu_sort_order
+            tableName: menus
+            columns:
+              - column:
+                  name: sort_order

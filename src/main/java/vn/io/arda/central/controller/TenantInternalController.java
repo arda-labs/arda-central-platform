@@ -13,7 +13,7 @@ import vn.io.arda.central.service.TenantService;
  * SHOULD BE PROTECTED by API Gateway or mTLS in production
  */
 @RestController
-@RequestMapping("/api/v1/internal/tenants")
+@RequestMapping("/v1/internal/tenants")
 @RequiredArgsConstructor
 @Slf4j
 public class TenantInternalController {

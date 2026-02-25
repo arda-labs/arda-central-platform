@@ -30,14 +30,6 @@
 		<java.version>21</java.version>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>github</id>
-			<name>GitHub Arda Labs Apache Maven Packages</name>
-			<url>https://maven.pkg.github.com/arda-labs/arda-shared-kernel</url>
-		</repository>
-	</repositories>
-
 	<dependencies>
 		<!-- Arda Shared Kernel for Multi-Tenancy Support -->
 		<dependency>
@@ -70,6 +62,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
@@ -78,6 +74,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- Keycloak Admin Client -->
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-admin-client</artifactId>
+			<version>26.0.0</version>
 		</dependency>
 	</dependencies>
 

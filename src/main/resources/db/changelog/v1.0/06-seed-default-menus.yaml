@@ -1,0 +1,137 @@
+databaseChangeLog:
+  - changeSet:
+      id: 06-seed-default-menus
+      author: arda-central
+      context: seed
+      changes:
+        # Top-level: Dashboard
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000001"}
+              - column: {name: label, value: "Dashboard"}
+              - column: {name: path, value: "/dashboard"}
+              - column: {name: icon, value: "LayoutDashboard"}
+              - column: {name: icon_color, value: "#6366F1"}
+              - column: {name: sort_order, valueNumeric: 0}
+
+        # Top-level: CRM
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000010"}
+              - column: {name: label, value: "CRM"}
+              - column: {name: icon, value: "Users"}
+              - column: {name: icon_color, value: "#10B981"}
+              - column: {name: sort_order, valueNumeric: 10}
+
+        # Top-level: BPM
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000020"}
+              - column: {name: label, value: "BPM"}
+              - column: {name: icon, value: "Workflow"}
+              - column: {name: icon_color, value: "#F59E0B"}
+              - column: {name: sort_order, valueNumeric: 20}
+
+        # Top-level: Administration
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000030"}
+              - column: {name: label, value: "Administration"}
+              - column: {name: icon, value: "Settings"}
+              - column: {name: icon_color, value: "#8B5CF6"}
+              - column: {name: sort_order, valueNumeric: 30}
+
+        # CRM children
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000011"}
+              - column: {name: label, value: "Leads"}
+              - column: {name: path, value: "/crm/leads"}
+              - column: {name: icon, value: "Target"}
+              - column: {name: icon_color, value: "#10B981"}
+              - column: {name: sort_order, valueNumeric: 0}
+              - column: {name: parent_id, value: "00000000-0000-0000-0001-000000000010"}
+
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000012"}
+              - column: {name: label, value: "Customers"}
+              - column: {name: path, value: "/crm/customers"}
+              - column: {name: icon, value: "Building2"}
+              - column: {name: icon_color, value: "#10B981"}
+              - column: {name: sort_order, valueNumeric: 1}
+              - column: {name: parent_id, value: "00000000-0000-0000-0001-000000000010"}
+
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000013"}
+              - column: {name: label, value: "Contacts"}
+              - column: {name: path, value: "/crm/contacts"}
+              - column: {name: icon, value: "Contact"}
+              - column: {name: icon_color, value: "#10B981"}
+              - column: {name: sort_order, valueNumeric: 2}
+              - column: {name: parent_id, value: "00000000-0000-0000-0001-000000000010"}
+
+        # BPM children
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000021"}
+              - column: {name: label, value: "Processes"}
+              - column: {name: path, value: "/bpm/processes"}
+              - column: {name: icon, value: "GitBranch"}
+              - column: {name: icon_color, value: "#F59E0B"}
+              - column: {name: sort_order, valueNumeric: 0}
+              - column: {name: parent_id, value: "00000000-0000-0000-0001-000000000020"}
+
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000022"}
+              - column: {name: label, value: "Tasks"}
+              - column: {name: path, value: "/bpm/tasks"}
+              - column: {name: icon, value: "CheckSquare"}
+              - column: {name: icon_color, value: "#F59E0B"}
+              - column: {name: sort_order, valueNumeric: 1}
+              - column: {name: parent_id, value: "00000000-0000-0000-0001-000000000020"}
+
+        # Administration children
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000031"}
+              - column: {name: label, value: "Users"}
+              - column: {name: path, value: "/iam/users"}
+              - column: {name: icon, value: "UserCog"}
+              - column: {name: icon_color, value: "#8B5CF6"}
+              - column: {name: sort_order, valueNumeric: 0}
+              - column: {name: parent_id, value: "00000000-0000-0000-0001-000000000030"}
+
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000032"}
+              - column: {name: label, value: "Roles"}
+              - column: {name: path, value: "/iam/roles"}
+              - column: {name: icon, value: "Shield"}
+              - column: {name: icon_color, value: "#8B5CF6"}
+              - column: {name: sort_order, valueNumeric: 1}
+              - column: {name: parent_id, value: "00000000-0000-0000-0001-000000000030"}
+
+        - insert:
+            tableName: menus
+            columns:
+              - column: {name: id, value: "00000000-0000-0000-0001-000000000033"}
+              - column: {name: label, value: "Permissions"}
+              - column: {name: path, value: "/iam/permissions"}
+              - column: {name: icon, value: "Lock"}
+              - column: {name: icon_color, value: "#8B5CF6"}
+              - column: {name: sort_order, valueNumeric: 2}
+              - column: {name: parent_id, value: "00000000-0000-0000-0001-000000000030"}

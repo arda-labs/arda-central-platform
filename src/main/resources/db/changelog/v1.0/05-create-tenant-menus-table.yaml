@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05-create-tenant-menus-table
+      author: arda-central
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: tenant_menus
+      changes:
+        - createTable:
+            tableName: tenant_menus
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: tenant_key
+                  type: VARCHAR(6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: menu_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sort_order_override
+                  type: INTEGER
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: tenant_menus
+            baseColumnNames: tenant_key
+            constraintName: fk_tenant_menu_tenant
+            referencedTableName: tenants
+            referencedColumnNames: tenant_key
+            onDelete: CASCADE
+
+        - addForeignKeyConstraint:
+            baseTableName: tenant_menus
+            baseColumnNames: menu_id
+            constraintName: fk_tenant_menu_menu
+            referencedTableName: menus
+            referencedColumnNames: id
+            onDelete: CASCADE
+
+        - addUniqueConstraint:
+            tableName: tenant_menus
+            columnNames: tenant_key, menu_id
+            constraintName: uk_tenant_menu
+
+        - createIndex:
+            indexName: idx_tenant_menu_tenant
+            tableName: tenant_menus
+            columns:
+              - column:
+                  name: tenant_key
+
+        - createIndex:
+            indexName: idx_tenant_menu_enabled
+            tableName: tenant_menus
+            columns:
+              - column:
+                  name: enabled

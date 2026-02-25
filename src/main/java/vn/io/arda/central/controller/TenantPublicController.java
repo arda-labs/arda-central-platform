@@ -13,7 +13,7 @@ import vn.io.arda.central.service.TenantService;
  * Safe for client-side consumption
  */
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/v1")
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "*") // Allow CORS for local development

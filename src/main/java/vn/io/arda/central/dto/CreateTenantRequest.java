@@ -18,8 +18,8 @@ public class CreateTenantRequest {
 
     @NotBlank(message = "Tenant key is required")
     @Pattern(
-            regexp = "^[a-z0-9_-]+$",
-            message = "Tenant key must contain only lowercase letters, numbers, hyphens, and underscores"
+            regexp = "^[a-z0-9]{6}$",
+            message = "Tenant key must be exactly 6 characters containing only lowercase letters and numbers"
     )
     private String tenantKey;
 

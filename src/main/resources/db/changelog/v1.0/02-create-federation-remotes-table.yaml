@@ -1,0 +1,109 @@
+databaseChangeLog:
+  - changeSet:
+      id: 02-create-federation-remotes-table
+      author: arda-central
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: federation_remotes
+      changes:
+        - createTable:
+            tableName: federation_remotes
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: display_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(500)
+              - column:
+                  name: remote_entry_url
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: exposed_module
+                  type: VARCHAR(100)
+                  defaultValue: ./Component
+              - column:
+                  name: icon
+                  type: VARCHAR(50)
+              - column:
+                  name: enabled
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: display_order
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tenant_key
+                  type: VARCHAR(50)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: federation_remotes
+            baseColumnNames: tenant_key
+            constraintName: fk_federation_tenant
+            referencedTableName: tenants
+            referencedColumnNames: tenant_key
+            onDelete: CASCADE
+
+        - createIndex:
+            indexName: idx_federation_name
+            tableName: federation_remotes
+            unique: true
+            columns:
+              - column:
+                  name: name
+
+        - createIndex:
+            indexName: idx_federation_enabled
+            tableName: federation_remotes
+            columns:
+              - column:
+                  name: enabled
+
+        - createIndex:
+            indexName: idx_federation_tenant
+            tableName: federation_remotes
+            columns:
+              - column:
+                  name: tenant_key
+
+        - createIndex:
+            indexName: idx_federation_order
+            tableName: federation_remotes
+            columns:
+              - column:
+                  name: display_order

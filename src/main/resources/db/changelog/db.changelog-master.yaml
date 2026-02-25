@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/v1.0/01-create-tenants-table.yaml
+  - include:
+      file: db/changelog/v1.0/02-create-federation-remotes-table.yaml
+  - include:
+      file: db/changelog/v1.0/03-seed-federation-data.yaml
+  - include:
+      file: db/changelog/v1.0/04-create-menus-table.yaml
+  - include:
+      file: db/changelog/v1.0/05-create-tenant-menus-table.yaml
+  - include:
+      file: db/changelog/v1.0/06-seed-default-menus.yaml

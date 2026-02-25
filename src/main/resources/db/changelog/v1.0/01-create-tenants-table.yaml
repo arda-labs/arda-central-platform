@@ -1,0 +1,94 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01-create-tenants-table
+      author: arda-central
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: tenants
+      changes:
+        - createTable:
+            tableName: tenants
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: tenant_key
+                  type: VARCHAR(6)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: display_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: ACTIVE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: logo_url
+                  type: VARCHAR(500)
+              - column:
+                  name: primary_color
+                  type: VARCHAR(7)
+              - column:
+                  name: db_type
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: jdbc_url
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: db_username
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: db_password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: driver_class_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            indexName: idx_tenant_key
+            tableName: tenants
+            unique: true
+            columns:
+              - column:
+                  name: tenant_key
+
+        - createIndex:
+            indexName: idx_tenant_status
+            tableName: tenants
+            columns:
+              - column:
+                  name: status

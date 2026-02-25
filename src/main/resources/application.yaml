@@ -5,20 +5,27 @@ spring:
   application:
     name: arda-central-platform
 
+  # Disable default Spring Boot Security auto-configuration
+  # We use custom security config from arda-shared-kernel
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
   # Central Platform Database (Static Configuration)
   datasource:
     url: jdbc:postgresql://localhost:5432/arda_central
     username: postgres
-    password: postgres
+    password: password
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
       connection-timeout: 30000
 
-  # Disable Liquibase (database migration managed manually)
+  # Liquibase for database migrations
   liquibase:
-    enabled: false
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
 
   jpa:
     hibernate:
@@ -51,9 +58,7 @@ arda:
         issuer-uri: http://localhost:8081/realms/master
       cors:
         allowed-origins:
-          - http://localhost:4200
-          - http://localhost:4201
-          - http://localhost:4210
+          - http://localhost:3000
         allowed-methods:
           - GET
           - POST

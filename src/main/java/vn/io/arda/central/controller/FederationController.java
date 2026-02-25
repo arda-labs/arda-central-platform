@@ -16,7 +16,7 @@ import java.util.Map;
  * Used by the Shell application to load remote micro-frontends dynamically
  */
 @RestController
-@RequestMapping("/api/v1/federation")
+@RequestMapping("/v1/federation")
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "*") // Allow CORS for local development

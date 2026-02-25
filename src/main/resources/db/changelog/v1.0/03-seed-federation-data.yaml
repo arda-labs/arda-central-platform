@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 03-seed-federation-data
+      author: arda-central
+      context: seed
+      changes:
+        - insert:
+            tableName: federation_remotes
+            columns:
+              - column: {name: id, valueComputed: "gen_random_uuid()"}
+              - column: {name: name, value: "iam"}
+              - column: {name: display_name, value: "IAM Module"}
+              - column: {name: description, value: "Identity & Access Management"}
+              - column: {name: remote_entry_url, value: "http://localhost:4202/remoteEntry.json"}
+              - column: {name: exposed_module, value: "./Component"}
+              - column: {name: icon, value: "pi-shield"}
+              - column: {name: enabled, valueBoolean: true}
+              - column: {name: display_order, valueNumeric: 1}
+
+        - insert:
+            tableName: federation_remotes
+            columns:
+              - column: {name: id, valueComputed: "gen_random_uuid()"}
+              - column: {name: name, value: "crm"}
+              - column: {name: display_name, value: "CRM Module"}
+              - column: {name: description, value: "Customer Relationship Management"}
+              - column: {name: remote_entry_url, value: "http://localhost:4201/remoteEntry.json"}
+              - column: {name: exposed_module, value: "./Component"}
+              - column: {name: icon, value: "pi-users"}
+              - column: {name: enabled, valueBoolean: true}
+              - column: {name: display_order, valueNumeric: 2}
+
+        - insert:
+            tableName: federation_remotes
+            columns:
+              - column: {name: id, valueComputed: "gen_random_uuid()"}
+              - column: {name: name, value: "bpm"}
+              - column: {name: display_name, value: "BPM Module"}
+              - column: {name: description, value: "Business Process Management"}
+              - column: {name: remote_entry_url, value: "http://localhost:4210/remoteEntry.json"}
+              - column: {name: exposed_module, value: "./Component"}
+              - column: {name: icon, value: "pi-sitemap"}
+              - column: {name: enabled, valueBoolean: true}
+              - column: {name: display_order, valueNumeric: 3}
