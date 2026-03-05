@@ -11,7 +11,6 @@ public record TenantDatabaseConfigDto(
     String tenantKey,
     String displayName,
     String status,
-    String dbType,
     String jdbcUrl,
     String dbUsername,
     String dbPassword,

@@ -19,20 +19,20 @@ VALUES (
     CURRENT_TIMESTAMP
 ) ON CONFLICT (tenant_key) DO NOTHING;
 
--- Tenant 2: Oracle Tenant (Demo Company using Oracle)
+-- Tenant 2: Secondary PG Tenant
 INSERT INTO tenants (id, tenant_key, display_name, status, logo_url, primary_color, db_type, jdbc_url, db_username, db_password, driver_class_name, created_at, updated_at)
 VALUES (
     gen_random_uuid(),
-    'tenant_ora',
-    'Oracle Demo Tenant',
+    'tenant_base',
+    'Base Demo Tenant',
     'ACTIVE',
-    'https://www.oracle.com/a/tech/img/oracle-database-logo.png',
-    '#F80000',
-    'ORACLE',
-    'jdbc:oracle:thin:@localhost:1521:XE',
-    'arda_tenant_ora',
-    'oracle123',
-    'oracle.jdbc.OracleDriver',
+    NULL,
+    '#10B981',
+    'POSTGRES',
+    'jdbc:postgresql://localhost:5432/arda_tenant_base',
+    'postgres',
+    'postgres',
+    'org.postgresql.Driver',
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
 ) ON CONFLICT (tenant_key) DO NOTHING;
@@ -91,7 +91,7 @@ VALUES (
     CURRENT_TIMESTAMP
 ) ON CONFLICT (tenant_key) DO NOTHING;
 
--- Tenant 6: Viettel Group (Real-world example)
+-- Tenant 6: Viettel Group
 INSERT INTO tenants (id, tenant_key, display_name, status, logo_url, primary_color, db_type, jdbc_url, db_username, db_password, driver_class_name, created_at, updated_at)
 VALUES (
     gen_random_uuid(),
@@ -100,11 +100,11 @@ VALUES (
     'ACTIVE',
     'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Viettel_logo.svg/200px-Viettel_logo.svg.png',
     '#EC1C24',
-    'ORACLE',
-    'jdbc:oracle:thin:@localhost:1521:XE',
-    'arda_viettel',
-    'oracle123',
-    'oracle.jdbc.OracleDriver',
+    'POSTGRES',
+    'jdbc:postgresql://localhost:5432/arda_viettel',
+    'postgres',
+    'postgres',
+    'org.postgresql.Driver',
     CURRENT_TIMESTAMP,
     CURRENT_TIMESTAMP
 ) ON CONFLICT (tenant_key) DO NOTHING;

@@ -119,7 +119,6 @@ Three sample tenants are created automatically:
 | Tenant Key    | Database Type | Database Name         | Status |
 |---------------|---------------|-----------------------|--------|
 | tenant_pg     | PostgreSQL    | arda_tenant_pg        | ACTIVE |
-| tenant_ora    | Oracle        | XE (arda_tenant_ora)  | ACTIVE |
 | tenant_trial  | PostgreSQL    | arda_tenant_trial     | TRIAL  |
 
 ## Testing
@@ -155,7 +154,7 @@ Other microservices (IAM, CRM, BPM) will:
 ## Next Steps
 
 After this service is running:
-1. Create tenant databases (`arda_tenant_pg`, `arda_tenant_ora`)
+1. Create tenant databases (`arda_tenant_pg`, `arda_tenant_trial`)
 2. Configure **arda-iam-service** (Port 8001) to consume this API
 3. Set up APISIX Gateway to route external traffic
 4. Implement API Key authentication for Internal API

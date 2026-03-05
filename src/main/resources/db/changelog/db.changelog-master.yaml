@@ -11,3 +11,7 @@ databaseChangeLog:
       file: db/changelog/v1.0/05-create-tenant-menus-table.yaml
   - include:
       file: db/changelog/v1.0/06-seed-default-menus.yaml
+  - include:
+      file: db/changelog/v1.0/07-seed-master-tenant.yaml
+  - include:
+      file: db/changelog/v1.0/08-drop-db-type-column.yaml

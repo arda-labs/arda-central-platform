@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 08-drop-db-type-column
+      author: arda-central
+      changes:
+        - dropColumn:
+            columnName: db_type
+            tableName: tenants

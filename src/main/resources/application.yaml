@@ -45,6 +45,12 @@ spring:
       data-locations: classpath:data.sql
       continue-on-error: false
 
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 # Disable multi-tenancy for Central Platform
 # Central Platform manages tenant metadata, it doesn't route to tenant databases
 arda:
@@ -69,6 +75,12 @@ arda:
         allowed-headers:
           - "*"
         max-age: 3600
+    # V2: Gateway AuthN — APISIX verifies Keycloak JWT and signs Internal JWT
+    # Services verify X-Internal-Token header instead of Keycloak JWT directly
+    internal-jwt:
+      enabled: true
+      public-key-location: classpath:internal-jwt-public.pem
+      issuer: arda-gateway
 
 logging:
   level:

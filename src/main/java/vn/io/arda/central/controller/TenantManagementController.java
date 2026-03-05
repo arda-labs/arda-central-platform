@@ -84,7 +84,6 @@ public class TenantManagementController {
                         tenant.getDisplayName(),
                         tenant.getPrimaryColor(),
                         tenant.getLogoUrl(),
-                        tenant.getDbType().name(),
                         tenant.getStatus().name()
                 ))
                 .collect(Collectors.toList());

@@ -14,6 +14,5 @@ public record TenantPublicInfoDto(
         String name, // Matches 'name' in Shell's TenantInfo
         String primaryColor,
         String logo, // Matches 'logo' in Shell's TenantInfo
-        String dbType,
         String status) {
 }

@@ -17,7 +17,6 @@ public record TenantDetailDto(
         String name,
         String primaryColor,
         String logo,
-        String dbType,
         String status,
         String jdbcUrl,
         String dbUsername,

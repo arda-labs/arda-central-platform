@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -22,7 +23,7 @@ import java.util.UUID;
 public class Tenant {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
     private UUID id;
 
     @NotBlank(message = "Tenant key is required")
@@ -48,10 +49,6 @@ public class Tenant {
     private String primaryColor;
 
     // Database Infrastructure Configuration
-    @Enumerated(EnumType.STRING)
-    @Column(name = "db_type", nullable = false, length = 20)
-    private DatabaseType dbType;
-
     @NotBlank(message = "JDBC URL is required")
     @Column(name = "jdbc_url", nullable = false, length = 500)
     private String jdbcUrl;
@@ -82,10 +79,5 @@ public class Tenant {
         INACTIVE,
         TRIAL,
         SUSPENDED
-    }
-
-    public enum DatabaseType {
-        POSTGRES,
-        ORACLE
     }
 }

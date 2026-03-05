@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * Request DTO for creating a new tenant.
+ * Database connection is auto-generated from tenantKey.
  *
  * @since 0.0.2
  */
@@ -16,37 +17,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateTenantRequest {
 
-    @NotBlank(message = "Tenant key is required")
-    @Pattern(
-            regexp = "^[a-z0-9]{6}$",
-            message = "Tenant key must be exactly 6 characters containing only lowercase letters and numbers"
-    )
-    private String tenantKey;
+        @NotBlank(message = "Tenant key is required")
+        @Pattern(regexp = "^[a-z0-9]{6}$", message = "Tenant key must be exactly 6 characters containing only lowercase letters and numbers")
+        private String tenantKey;
 
-    @NotBlank(message = "Display name is required")
-    private String displayName;
+        @NotBlank(message = "Display name is required")
+        private String displayName;
 
-    private String logoUrl;
+        private String logoUrl;
 
-    @Pattern(
-            regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
-            message = "Primary color must be a valid hex color code"
-    )
-    private String primaryColor;
+        @Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", message = "Primary color must be a valid hex color code")
+        private String primaryColor;
 
-    @NotBlank(message = "Database type is required")
-    @Pattern(regexp = "^(POSTGRES|ORACLE)$", message = "Database type must be POSTGRES or ORACLE")
-    private String dbType;
 
-    @NotBlank(message = "JDBC URL is required")
-    private String jdbcUrl;
-
-    @NotBlank(message = "Database username is required")
-    private String dbUsername;
-
-    @NotBlank(message = "Database password is required")
-    private String dbPassword;
-
-    @NotBlank(message = "Driver class name is required")
-    private String driverClassName;
 }
